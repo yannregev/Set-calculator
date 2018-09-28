@@ -130,6 +130,7 @@ public class List<E extends Comparable> implements ListInterface<E>{
 		Node node = first;
 		while (node != null) {
 			temp.insert(node.data);
+			node = node.next;
 		}
 		return temp;
 	}

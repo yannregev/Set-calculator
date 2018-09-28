@@ -28,7 +28,7 @@ public interface SetInterface<E> {
 		PRE - 
 		POST- the value of the identifiers array is reset to empty with a size of 'size'
     */
-	public void append(E i);
+	public void append(E rhs);
 	/*
 		PRE -
 		POST- Copys Identifier to the end of the array
@@ -38,7 +38,7 @@ public interface SetInterface<E> {
 		PRE -
 		POST-
 	*/	
-	public boolean contains(E otherIdentifer);
+	public boolean contains(E rhs);
 	/*
 		PRE -
 		POST-

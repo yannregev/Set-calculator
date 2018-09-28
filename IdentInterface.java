@@ -1,4 +1,4 @@
-public interface IdentInterface {
+public interface IdentInterface extends Comparable<IdentInterface> {
     /*
 	Elements    : String of type StringBuffer
 	Structure   : linear
