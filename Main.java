@@ -7,6 +7,7 @@ public class Main {
 
 	static PrintStream out;
 	static Map<String,Set<BigInteger>> variables;
+	static int line = 1;
 
 	char nextChar(Scanner in) {
 		return in.next().charAt(0);
@@ -95,7 +96,12 @@ public class Main {
 			return set(in);
 		} else if (nextCharIs(in, '(')) {
 			findNext(in);
-			return expression(in);
+			Set<BigInteger> set = expression(in);
+			skipSpaces(in);
+			if (!nextCharIs(in, ')')) {
+				throw new APException("')' expected");
+			}
+			return set;
 		} else {
 			throw new APException("invalid factor");
 		}
@@ -132,39 +138,43 @@ public class Main {
 
 	void statement(Scanner in) throws APException {
 		skipSpaces(in);
+		
 		if (nextCharIs(in, '?')) {
 			findNext(in);
-			out.printf("%s\n", expression(in));
+			out.printf("%d:%s\n",line, expression(in));
 		} else if (nextCharIsLetter(in)) {
 			storeVariable(in);
 		} else if (nextCharIs(in,'/')) {
-	
+			// Nothing to do
 		} else {
 			throw new APException("Invalid statement");
 		}
+		line++;
 	}
 
-    	private void start() {
-        	Scanner in = new Scanner(System.in).useDelimiter("");
+    	private void start(String[] argv) {
+        	
 		out = new PrintStream(System.out);
-
+		
 		variables = new HashMap<String, Set<BigInteger>>();     	
 		
 
 		try {
+			Scanner in = new Scanner(new File(argv[0])).useDelimiter("");
 			while (in.hasNextLine()){
 				statement(in);
 				in.nextLine();
 			}
 		} catch (APException e) {
 			out.printf("Error: %s\n",e.getMessage());
+		} catch (Exception e) {
+
 		}
 
 		
-        // While there is input, read line and parse it.
     	}
 
     	public static void main(String[] argv) {
-        	new Main().start();
+        	new Main().start(argv);
     	}
 }
