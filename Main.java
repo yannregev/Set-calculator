@@ -74,7 +74,7 @@ public class Main {
 		Set<BigInteger> set = factor(in);
 		while (nextCharIs(in,'*')) {
 			findNext(in);
-			set.intersection(factor(in));
+			set = set.intersection(factor(in));
 		}
 		return set;
 	}
@@ -101,6 +101,7 @@ public class Main {
 			if (!nextCharIs(in, ')')) {
 				throw new APException("')' expected");
 			}
+			findNext(in);
 			return set;
 		} else {
 			throw new APException("invalid factor");
