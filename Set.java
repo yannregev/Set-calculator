@@ -75,12 +75,12 @@ public class Set<E extends Comparable<E>> {
 			}
 			this.elements.goToNext();
 		}
-		this.elements.goToFirst();
+		s.elements.goToFirst();
 		for(int i = 0; i < s.size; i++) {
 			if(!unionSet.contains(s.elements.retrieve())) {
 				symmDiff.append(s.elements.retrieve());
 			}
-			this.elements.goToNext();
+			s.elements.goToNext();
 		}
 		return symmDiff;
 	}

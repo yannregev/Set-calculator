@@ -41,9 +41,16 @@ public class Main {
 
 	BigInteger identifier(Scanner in) throws APException{
 		StringBuffer ide = new StringBuffer();
+		if (nextCharIs(in, '0')) {
+			ide.append(in.next());
+			skipSpaces(in);
+			return new BigInteger(ide.toString());
+		}
+		
 		while (nextCharIsDigit(in)) {
 			ide.append(in.next());
 		}
+		if (ide.toString().isEmpty()) throw new APException("number expected");
 		skipSpaces(in);
 		return new BigInteger(ide.toString());
 	}
@@ -79,11 +86,12 @@ public class Main {
 		return set;
 	}
 
-	String varName(Scanner in) {
+	String varName(Scanner in) throws APException {
 		StringBuffer name = new StringBuffer();
 		while (nextCharIsLetter(in)) {
 			name.append(in.next());
 		}
+		if (!variables.containsKey(name.toString())) throw new APException("undefined variable");
 		skipSpaces(in);
 		return name.toString();
 	} 
@@ -110,10 +118,15 @@ public class Main {
 
 	Set<BigInteger> set(Scanner in) throws APException {
 		Set<BigInteger> set = new Set<BigInteger>();
-		while (nextCharIsDigit(in)) {
-			set.append(identifier(in));
-			if (!nextCharIs(in, ','))break;
+
+		if (nextCharIs(in, '}')) {
 			findNext(in);
+			return set;
+		}
+		set.append(identifier(in));
+		while(nextCharIs(in,',')) {
+			findNext(in);
+			set.append(identifier(in));
 		}
 		if (!nextCharIs(in, '}')) {
 			throw new APException("'}' expected");
@@ -133,8 +146,13 @@ public class Main {
 			throw new APException("'=' expected");
 		}
 		findNext(in);
-		variables.put(name.toString(), expression(in));
-
+		Set<BigInteger> set = expression(in);
+		if (!nextCharIs(in, '\n')) {
+			throw new APException("no end of line");
+		}
+		variables.put(name.toString(), set);
+		skipSpaces(in);
+		
 	}
 
 	void statement(Scanner in) throws APException {
@@ -142,7 +160,10 @@ public class Main {
 		
 		if (nextCharIs(in, '?')) {
 			findNext(in);
-			out.printf("%d:%s\n",line, expression(in));
+			Set<BigInteger> set = expression(in);
+			skipSpaces(in);
+			if (!nextCharIs(in, '\n')) throw new APException("no end of line");
+			out.printf("%d:%s\n",line, set);
 		} else if (nextCharIsLetter(in)) {
 			storeVariable(in);
 		} else if (nextCharIs(in,'/')) {
@@ -150,7 +171,7 @@ public class Main {
 		} else {
 			throw new APException("Invalid statement");
 		}
-		line++;
+		
 	}
 
     	private void start(String[] argv) {
@@ -158,21 +179,23 @@ public class Main {
 		out = new PrintStream(System.out);
 		
 		variables = new HashMap<String, Set<BigInteger>>();     	
-		
-
 		try {
-			Scanner in = new Scanner(new File(argv[0])).useDelimiter("");
+			Scanner in = new Scanner(new File(argv[0])).useDelimiter("");		
+		//	Scanner in = new Scanner("Lang5 = {}\n").useDelimiter("");
 			while (in.hasNextLine()){
-				statement(in);
+				try {
+					statement(in);
+					
+				} catch (APException e) {
+					out.printf("%d:Error: %s\n",line, e.getMessage());
+
+				}
+				line++;
 				in.nextLine();
 			}
-		} catch (APException e) {
-			out.printf("Error: %s\n",e.getMessage());
 		} catch (Exception e) {
 
 		}
-
-		
     	}
 
     	public static void main(String[] argv) {
