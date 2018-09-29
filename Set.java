@@ -14,8 +14,10 @@ public class Set<E extends Comparable<E>> {
 	}
 
 	public void append(E rhs) {
-		this.elements.insert(rhs);
-		size++;
+		if (!elements.find(rhs)) {
+			this.elements.insert(rhs);
+			size++;
+		}
 	}
 
 	public int getSize() {
