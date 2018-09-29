@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 public class Main {
 
 	static PrintStream out;
+	static Map<String,Set<BigInteger>> variables;
 
 	char nextChar(Scanner in) {
 		return in.next().charAt(0);
@@ -42,10 +43,11 @@ public class Main {
 		while (nextCharIsDigit(in)) {
 			ide.append(in.next());
 		}
+		skipSpaces(in);
 		return new BigInteger(ide.toString());
 	}
 
-	Set expression(Scanner in) throws APException {
+	Set<BigInteger> expression(Scanner in) throws APException {
 		if (nextCharIs(in,'+') || nextCharIs(in,'-') || nextCharIs(in,'|')) {
 			findNext(in);
 		}
@@ -76,25 +78,34 @@ public class Main {
 		return set;
 	}
 
+	String varName(Scanner in) {
+		StringBuffer name = new StringBuffer();
+		while (nextCharIsLetter(in)) {
+			name.append(in.next());
+		}
+		skipSpaces(in);
+		return name.toString();
+	} 
+
 	Set<BigInteger> factor(Scanner in) throws APException {
 		if (nextCharIsLetter(in)) {
-
+			return variables.get(varName(in));
 		} else if (nextCharIs(in, '{')) {
 			findNext(in);
 			return set(in);
 		} else if (nextCharIs(in, '(')) {
-
+			findNext(in);
+			return expression(in);
 		} else {
 			throw new APException("invalid factor");
 		}
-		return null;
 	}
 
 	Set<BigInteger> set(Scanner in) throws APException {
 		Set<BigInteger> set = new Set<BigInteger>();
 		while (nextCharIsDigit(in)) {
 			set.append(identifier(in));
-			if (!nextCharIs(in, ' '))break;
+			if (!nextCharIs(in, ','))break;
 			findNext(in);
 		}
 		if (!nextCharIs(in, '}')) {
@@ -103,30 +114,48 @@ public class Main {
 		findNext(in);
 		return set;
 	}
+	void storeVariable(Scanner in) throws APException {
+		StringBuffer name = new StringBuffer();
+		while (!nextCharIs(in,' ') && !nextCharIs(in,'=')) {
+			name.append(in.next());
+		}
+		
+		skipSpaces(in);
 
-	
+		if (!nextCharIs(in,'=')) {
+			throw new APException("'=' expected");
+		}
+		findNext(in);
+		variables.put(name.toString(), expression(in));
+
+	}
 
 	void statement(Scanner in) throws APException {
 		skipSpaces(in);
 		if (nextCharIs(in, '?')) {
 			findNext(in);
-			out.printf("%s\n",expression(in).toString());
+			out.printf("%s\n", expression(in));
 		} else if (nextCharIsLetter(in)) {
-
+			storeVariable(in);
 		} else if (nextCharIs(in,'/')) {
-			in.nextLine();
+	
 		} else {
-			in.nextLine();
 			throw new APException("Invalid statement");
 		}
 	}
 
     	private void start() {
-        	Scanner in = new Scanner("? {4324 4312 } | { 4312 }\n").useDelimiter("");
+        	Scanner in = new Scanner(System.in).useDelimiter("");
 		out = new PrintStream(System.out);
-        	
+
+		variables = new HashMap<String, Set<BigInteger>>();     	
+		
+
 		try {
-			statement(in);
+			while (in.hasNextLine()){
+				statement(in);
+				in.nextLine();
+			}
 		} catch (APException e) {
 			out.printf("Error: %s\n",e.getMessage());
 		}
