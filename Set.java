@@ -86,16 +86,15 @@ public class Set<E extends Comparable<E>> {
 	}
 
 	public String toString() {
-		StringBuffer temp = new StringBuffer("{");
+		StringBuffer temp = new StringBuffer();
 		this.elements.goToFirst();
-		for (int i = 0; i < this.size - 1; i++) {
-				temp.append(this.elements.retrieve() + " ");
-				this.elements.goToNext();
+		if (size > 0) {
+			temp.append(this.elements.retrieve());
+			this.elements.goToNext();
 		}
-		if (this.size > 0) {
-			temp.append(this.elements.retrieve() + "}");
-		} else {
-			temp.append("}");
+		for (int i = 1; i < this.size; i++) {
+				temp.append(" " + this.elements.retrieve());
+				this.elements.goToNext();
 		}
 		return temp.toString();
 	}

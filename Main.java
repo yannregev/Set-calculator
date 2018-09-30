@@ -138,7 +138,7 @@ public class Main {
 	}
 	void storeVariable(Scanner in) throws APException {
 		StringBuffer name = new StringBuffer();
-		while (nextCharIsLetter(in)) {
+		while (nextCharIsLetter(in) || nextCharIsDigit(in)) {
 			name.append(nextChar(in));
 		}
 		
@@ -165,7 +165,7 @@ public class Main {
 			Set<BigInteger> set = expression(in);
 			skipSpaces(in);
 			if (!nextCharIs(in, '\n')) throw new APException("no end of line");
-			out.printf("%d:%s\n",line, set);
+			out.printf("%s\n", set);
 		} else if (nextCharIsLetter(in)) {
 			storeVariable(in);
 		} else if (nextCharIs(in,'/')) {
@@ -189,7 +189,7 @@ public class Main {
 					statement(in);
 					
 				} catch (APException e) {
-					out.printf("%d:error %s\n",line, e.getMessage());
+					out.printf("error %s\n", e.getMessage());
 				}
 				line++;
 				in.nextLine();
