@@ -22,7 +22,7 @@ rein = {1, 2, 5}
 rein = {1, 2, 5, 16} - {2, 3, 4, 5}
 ?rein
 / eind testcase Reinout
-/ start testcase Eline van Mantgem
+/ start testcase Eline van Mantgem/Users/yannregev/Documents/Java/Assignment 2/AP2-Skeleton/src/main/java/calc.out
 / De volgende statements gaan verkeerd als de compareTo() in 
 / de Getal class niet goed werkt.
 A={1234567890, 2625242322}

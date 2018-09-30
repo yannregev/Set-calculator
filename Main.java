@@ -27,38 +27,36 @@ public class Main {
 	
 	void findNext(Scanner in) {
 		if (!in.hasNext())return;
-		in.next();
-		while (nextCharIs(in, ' ')) {
-			in.next();
-		}
+		do {
+			nextChar(in);
+		} while (nextCharIs(in, ' '));
 	}
 
 	void skipSpaces(Scanner in) {
 		while (nextCharIs(in, ' ')) {
-			in.next();
+			nextChar(in);
 		}
 	}
 
 	BigInteger identifier(Scanner in) throws APException{
 		StringBuffer ide = new StringBuffer();
 		if (nextCharIs(in, '0')) {
-			ide.append(in.next());
+			ide.append(nextChar(in));
 			skipSpaces(in);
 			return new BigInteger(ide.toString());
 		}
 		
 		while (nextCharIsDigit(in)) {
-			ide.append(in.next());
+			ide.append(nextChar(in));
 		}
-		if (ide.toString().isEmpty()) throw new APException("number expected");
+		if (ide.toString().isEmpty()) {
+			throw new APException("number expected");
+		}
 		skipSpaces(in);
 		return new BigInteger(ide.toString());
 	}
 
 	Set<BigInteger> expression(Scanner in) throws APException {
-		if (nextCharIs(in,'+') || nextCharIs(in,'-') || nextCharIs(in,'|')) {
-			findNext(in);
-		}
 		Set<BigInteger> set = term(in);
 		while (nextCharIs(in,'+') || nextCharIs(in,'-') || nextCharIs(in,'|')){
 			if (nextCharIs(in,'+')) {
@@ -79,9 +77,12 @@ public class Main {
 	
 	Set<BigInteger> term(Scanner in) throws APException {
 		Set<BigInteger> set = factor(in);
+		skipSpaces(in);
 		while (nextCharIs(in,'*')) {
-			findNext(in);
+			nextChar(in);
+			skipSpaces(in);
 			set = set.intersection(factor(in));
+			skipSpaces(in);	
 		}
 		return set;
 	}
@@ -89,10 +90,9 @@ public class Main {
 	String varName(Scanner in) throws APException {
 		StringBuffer name = new StringBuffer();
 		while (nextCharIsLetter(in)) {
-			name.append(in.next());
+			name.append(nextChar(in));
 		}
 		if (!variables.containsKey(name.toString())) throw new APException("undefined variable");
-		skipSpaces(in);
 		return name.toString();
 	} 
 
@@ -100,10 +100,12 @@ public class Main {
 		if (nextCharIsLetter(in)) {
 			return variables.get(varName(in));
 		} else if (nextCharIs(in, '{')) {
-			findNext(in);
+			nextChar(in);
+			skipSpaces(in);
 			return set(in);
 		} else if (nextCharIs(in, '(')) {
-			findNext(in);
+			nextChar(in);
+			skipSpaces(in);
 			Set<BigInteger> set = expression(in);
 			skipSpaces(in);
 			if (!nextCharIs(in, ')')) {
@@ -136,8 +138,8 @@ public class Main {
 	}
 	void storeVariable(Scanner in) throws APException {
 		StringBuffer name = new StringBuffer();
-		while (!nextCharIs(in,' ') && !nextCharIs(in,'=')) {
-			name.append(in.next());
+		while (nextCharIsLetter(in)) {
+			name.append(nextChar(in));
 		}
 		
 		skipSpaces(in);
@@ -157,9 +159,9 @@ public class Main {
 
 	void statement(Scanner in) throws APException {
 		skipSpaces(in);
-		
 		if (nextCharIs(in, '?')) {
-			findNext(in);
+			nextChar(in);
+			skipSpaces(in);
 			Set<BigInteger> set = expression(in);
 			skipSpaces(in);
 			if (!nextCharIs(in, '\n')) throw new APException("no end of line");
@@ -181,14 +183,13 @@ public class Main {
 		variables = new HashMap<String, Set<BigInteger>>();     	
 		try {
 			Scanner in = new Scanner(new File(argv[0])).useDelimiter("");		
-		//	Scanner in = new Scanner("Lang5 = {}\n").useDelimiter("");
+		//	Scanner in = new Scanner("APE = {}\n? APE ape\n").useDelimiter("");
 			while (in.hasNextLine()){
 				try {
 					statement(in);
 					
 				} catch (APException e) {
 					out.printf("%d:Error: %s\n",line, e.getMessage());
-
 				}
 				line++;
 				in.nextLine();
