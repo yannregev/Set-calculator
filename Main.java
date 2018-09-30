@@ -183,7 +183,7 @@ public class Main {
 		variables = new HashMap<String, Set<BigInteger>>();     	
 		try {
 			Scanner in = new Scanner(new File(argv[0])).useDelimiter("");		
-		//	Scanner in = new Scanner("APE = {}\n? APE ape\n").useDelimiter("");
+		//	Scanner in = new Scanner("APE = { 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42 }\n? APE\n").useDelimiter("");
 			while (in.hasNextLine()){
 				try {
 					statement(in);

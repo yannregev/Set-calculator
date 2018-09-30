@@ -47,23 +47,26 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 	public ListInterface<E> insert(E d) {
 		if (isEmpty()) {
 			first = current = last = new Node(d);
-		} else {
+		} else if (first.data.compareTo(d) > 0) {
+			current = first = first.prior = new Node (d, null, first);	
+		} else  {
 			current = first;
-			//TODO fix so it will be inserter in ascending order
+				//TODO fix so it will be inserter in ascending order	
 			while (current != last) {
-				if (current.data.compareTo(d) > 0 && current.next.data.compareTo(d) < 0)
+				if (current.next.data.compareTo(d) > 0) {
 					break;
+				}
 				current = current.next;
 			}
-
 			if (current == last){
 				current = last = last.next = new Node(d, current, null);
 			} else {
 				current = current.next = current.next.prior = new Node(d, current, current.next);
 			}
 		}
+
 		size++;
-		return null;
+		return this;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public class Set<E extends Comparable<E>> {
 
 	public void append(E rhs) {
 		if (!elements.find(rhs)) {
-			this.elements.insert(rhs);
+			this.elements = this.elements.insert(rhs);
 			size++;
 		}
 	}
