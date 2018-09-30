@@ -109,12 +109,12 @@ public class Main {
 			Set<BigInteger> set = expression(in);
 			skipSpaces(in);
 			if (!nextCharIs(in, ')')) {
-				throw new APException("')' expected");
+				throw new APException("missing parenthesis");
 			}
 			findNext(in);
 			return set;
 		} else {
-			throw new APException("invalid factor");
+			throw new APException("incomplete statement");
 		}
 	}
 
@@ -131,7 +131,7 @@ public class Main {
 			set.append(identifier(in));
 		}
 		if (!nextCharIs(in, '}')) {
-			throw new APException("'}' expected");
+			throw new APException("missing closing curly brace");
 		}
 		findNext(in);
 		return set;
@@ -145,7 +145,7 @@ public class Main {
 		skipSpaces(in);
 
 		if (!nextCharIs(in,'=')) {
-			throw new APException("'=' expected");
+			throw new APException("equal sign expected");
 		}
 		findNext(in);
 		Set<BigInteger> set = expression(in);
@@ -171,7 +171,7 @@ public class Main {
 		} else if (nextCharIs(in,'/')) {
 			// Nothing to do
 		} else {
-			throw new APException("Invalid statement");
+			throw new APException("no statement");
 		}
 		
 	}
@@ -189,7 +189,7 @@ public class Main {
 					statement(in);
 					
 				} catch (APException e) {
-					out.printf("%d:Error: %s\n",line, e.getMessage());
+					out.printf("%d:error %s\n",line, e.getMessage());
 				}
 				line++;
 				in.nextLine();
