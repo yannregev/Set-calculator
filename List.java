@@ -28,7 +28,7 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 
 	@Override
 	public boolean isEmpty() {
-		return first == null ? true : false;
+		return size == 0 ? true : false;
 	}
 
 	@Override
@@ -51,7 +51,6 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 			current = first = first.prior = new Node (d, null, first);	
 		} else  {
 			current = first;
-				//TODO fix so it will be inserter in ascending order	
 			while (current != last) {
 				if (current.next.data.compareTo(d) > 0) {
 					break;
@@ -79,12 +78,19 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 		if (isEmpty()) {
 			return null;
 		}
+		if (first == last) {
+			first = current = last = null;
+			size--;
+			return null;
+		}
 
 		if (current == last) {
+			last = current = current.prior;
+			current.next = null;
+		} else {
 			current.prior.next = current.next;
 			current.next.prior = current.prior;
-		} else {
-			last = current = current.prior;
+			current = current.next;
 		}
 		return this;
 	}
