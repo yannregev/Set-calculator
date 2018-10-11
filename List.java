@@ -92,6 +92,7 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 			current.next.prior = current.prior;
 			current = current.next;
 		}
+		size--;
 		return this;
 	}
 
