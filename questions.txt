@@ -1,0 +1,3 @@
+list remove() should we check if list is empty?
+Should all the functions in main be private
+is Identifier a good name for an element of a set?

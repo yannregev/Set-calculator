@@ -6,8 +6,7 @@ import java.util.regex.Pattern;
 public class Main {
 
 	static PrintStream out;
-	static Map<String,Set<BigInteger>> variables;
-	static int line = 1;
+	static Map<String,SetInterface<BigInteger>> variables;
 
 	char nextChar(Scanner in) {
 		return in.next().charAt(0);
@@ -47,27 +46,25 @@ public class Main {
 		}
 		
 		while (nextCharIsDigit(in)) {
-			ide.append(nextChar(in));
+			ide.append(in.next());
 		}
+		skipSpaces(in);
 		if (ide.toString().isEmpty()) {
 			throw new APException("number expected");
 		}
-		skipSpaces(in);
 		return new BigInteger(ide.toString());
 	}
 
-	Set<BigInteger> expression(Scanner in) throws APException {
-		Set<BigInteger> set = term(in);
+	SetInterface<BigInteger> expression(Scanner in) throws APException {
+		SetInterface<BigInteger> set = term(in);
 		while (nextCharIs(in,'+') || nextCharIs(in,'-') || nextCharIs(in,'|')){
 			if (nextCharIs(in,'+')) {
 				findNext(in);
 				set = set.union(term(in));
-			}
-			if (nextCharIs(in,'-')) {
+			} else if (nextCharIs(in,'-')) {
 				findNext(in);
 				set = set.difference(term(in));
-			}
-			if (nextCharIs(in,'|')) {
+			} else if (nextCharIs(in,'|')) {
 				findNext(in);
 				set = set.symmetricDifference(term(in));
 			}
@@ -75,14 +72,14 @@ public class Main {
 		return set;
 	}
 	
-	Set<BigInteger> term(Scanner in) throws APException {
-		Set<BigInteger> set = factor(in);
+	SetInterface<BigInteger> term(Scanner in) throws APException {
+		SetInterface<BigInteger> set = factor(in);
 		skipSpaces(in);
 		while (nextCharIs(in,'*')) {
 			nextChar(in);
 			skipSpaces(in);
 			set = set.intersection(factor(in));
-			skipSpaces(in);	
+			skipSpaces(in);
 		}
 		return set;
 	}
@@ -90,13 +87,15 @@ public class Main {
 	String varName(Scanner in) throws APException {
 		StringBuffer name = new StringBuffer();
 		while (nextCharIsLetter(in)) {
-			name.append(nextChar(in));
+			name.append(in.next());
 		}
-		if (!variables.containsKey(name.toString())) throw new APException("undefined variable");
+		if (!variables.containsKey(name.toString())) {
+			throw new APException("undefined variable");
+		}
 		return name.toString();
 	} 
 
-	Set<BigInteger> factor(Scanner in) throws APException {
+	SetInterface<BigInteger> factor(Scanner in) throws APException {
 		if (nextCharIsLetter(in)) {
 			return variables.get(varName(in));
 		} else if (nextCharIs(in, '{')) {
@@ -106,7 +105,7 @@ public class Main {
 		} else if (nextCharIs(in, '(')) {
 			nextChar(in);
 			skipSpaces(in);
-			Set<BigInteger> set = expression(in);
+			SetInterface<BigInteger> set = expression(in);
 			skipSpaces(in);
 			if (!nextCharIs(in, ')')) {
 				throw new APException("missing parenthesis");
@@ -118,8 +117,8 @@ public class Main {
 		}
 	}
 
-	Set<BigInteger> set(Scanner in) throws APException {
-		Set<BigInteger> set = new Set<BigInteger>();
+	SetInterface<BigInteger> set(Scanner in) throws APException {
+		SetInterface<BigInteger> set = new Set<BigInteger>();
 
 		if (nextCharIs(in, '}')) {
 			findNext(in);
@@ -136,6 +135,7 @@ public class Main {
 		findNext(in);
 		return set;
 	}
+
 	void storeVariable(Scanner in) throws APException {
 		StringBuffer name = new StringBuffer();
 		while (nextCharIsLetter(in) || nextCharIsDigit(in)) {
@@ -148,7 +148,7 @@ public class Main {
 			throw new APException("equal sign expected");
 		}
 		findNext(in);
-		Set<BigInteger> set = expression(in);
+		SetInterface<BigInteger> set = expression(in);
 		if (!nextCharIs(in, '\n')) {
 			throw new APException("no end of line");
 		}
@@ -162,41 +162,35 @@ public class Main {
 		if (nextCharIs(in, '?')) {
 			nextChar(in);
 			skipSpaces(in);
-			Set<BigInteger> set = expression(in);
+			SetInterface<BigInteger> set = expression(in);
 			skipSpaces(in);
 			if (!nextCharIs(in, '\n')) throw new APException("no end of line");
 			out.printf("%s\n", set);
 		} else if (nextCharIsLetter(in)) {
 			storeVariable(in);
 		} else if (nextCharIs(in,'/')) {
-			// Nothing to do
+			// Nothing to do, comment
 		} else {
 			throw new APException("no statement");
 		}
 		
 	}
 
-    	private void start(String[] argv) {
-        	
+    	private void start(String[] argv) {	
 		out = new PrintStream(System.out);
-		
-		variables = new HashMap<String, Set<BigInteger>>();     	
-		try {
-			Scanner in = new Scanner(new File(argv[0])).useDelimiter("");		
-		//	Scanner in = new Scanner("APE = { 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42 }\n? APE\n").useDelimiter("");
-			while (in.hasNextLine()){
-				try {
-					statement(in);
-					
-				} catch (APException e) {
-					out.printf("error %s\n", e.getMessage());
-				}
-				line++;
-				in.nextLine();
+		variables = new HashMap<String, SetInterface<BigInteger>>();     	
+		Scanner in = new Scanner(System.in).useDelimiter("");	
+		//Scanner in = new Scanner("? {2, 3}\n").useDelimiter("");	
+		while (in.hasNextLine()){
+			try {
+				statement(in);
+				
+			} catch (APException e) {
+				out.printf("error %s\n", e.getMessage());
 			}
-		} catch (Exception e) {
-
+			in.nextLine();
 		}
+
     	}
 
     	public static void main(String[] argv) {

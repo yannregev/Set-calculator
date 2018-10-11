@@ -1,4 +1,4 @@
-public interface SetInterface<E> {
+public interface SetInterface<E extends Comparable<E>> {
 
     /*
 	Elements    : identifiers of Type Identifier 
@@ -28,6 +28,7 @@ public interface SetInterface<E> {
 		PRE - 
 		POST- the value of the identifiers array is reset to empty with a size of 'size'
     */
+
 	public void append(E rhs);
 	/*
 		PRE -
@@ -36,31 +37,32 @@ public interface SetInterface<E> {
 	public int getSize();
 	/*
 		PRE -
-		POST-
+		POST- The number of elements has been returned
 	*/	
 	public boolean contains(E rhs);
 	/*
 		PRE -
-		POST-
+		POST- TRUE: the element exists in the list
+			FALSE: the element does not exist in the list
 	*/
-	public Set intersection(Set s);
+	public SetInterface<E> intersection(SetInterface<E> s);
 	/*
 		PRE -
-		POST- A new Set is created and the value is the intersection of of the two sets
+		POST- A new SetInterface is created and the value is the intersection of of the two SetInterfaces
 	*/
-	public Set difference(Set s);
+	public SetInterface<E> difference(SetInterface<E> s);
 	/*
 		PRE -
-		POST- A new Set is created and the value is the difference of of the two sets
+		POST- A new SetInterface is created and the value is the difference of of the two SetInterfaces
 	*/
-	public Set union(Set s);
+	public SetInterface<E> union(SetInterface<E> s);
 	/*
 		PRE -
-		POST- A new Set is created and the value is the union of of the two sets
+		POST- A new SetInterface is created and the value is the union of of the two SetInterfaces
 	*/
-	public Set symmetricDifference(Set s);
+	public SetInterface<E> symmetricDifference(SetInterface<E> s);
 	/*
 		PRE -
-		POST- A new Set is created and the value is the symmetric difference of of the two sets
+		POST- A new SetInterface is created and the value is the symmetric difference of of the two SetInterfaces
 	*/
 }

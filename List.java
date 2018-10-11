@@ -22,18 +22,18 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 	private int size;
 
 	public List() {
-		first = current = last = null;
-		size = 0;
+		this.first = this.current = this.last = null;
+		this.size = 0;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return size == 0 ? true : false;
+		return this.size == 0;
 	}
 
 	@Override
 	public ListInterface<E> init() {
-		first = current = last = null;
+		this.first = this.current = this.last = null;
 		size = 0;
 		return this;
 	}
@@ -97,13 +97,20 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 
 	@Override
 	public boolean find(E d) {
-		Node node = first;
-		while (node != null) {
-			if (d.equals(node.data)) {
-				return true;
+		if (isEmpty()) return false;
+		current = first;
+		if (current.data.compareTo(d) > 0) return false;
+		if (current.data.compareTo(d) == 0) return true;
+		current = current.next;
+		while (current != null) {
+			if (current.data.compareTo(d) == 0) return true;
+			if (current.data.compareTo(d) > 0) {
+				current = current.prior;
+				return false;
 			}
-			node = node.next;
+			current = current.next;
 		}
+		current = last;
 		return false;
 	}
 
