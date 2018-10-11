@@ -18,14 +18,14 @@ public interface SetInterface<E extends Comparable<E>> {
 	public SetInterface<E> init();
 
 	/*PRE - 
-	POST- the set is reset to empty 
+	POST- the setInterface object is reset to empty 
 	*/
 
 
 	public SetInterface append(E rhs);
 	/*
 		PRE -
-		POST- Copys Identifier to the end of the array
+		POST- a new element is added to the setInterface object
 	*/
 	public int getSize();
 	/*
@@ -35,27 +35,27 @@ public interface SetInterface<E extends Comparable<E>> {
 	public boolean contains(E rhs);
 	/*
 		PRE -
-		POST- TRUE: the element exists in the list
-			FALSE: the element does not exist in the list
+		POST- TRUE: the element exists in the setInterface object
+			FALSE: the element does not exist in the setInterface object
 	*/
 	public SetInterface<E> intersection(SetInterface<E> s);
 	/*
 		PRE -
-		POST- A new SetInterface is created and the value is the intersection of of the two SetInterfaces
+		POST-  the intersection value of of the two SetInterface objects is returned
 	*/
 	public SetInterface<E> difference(SetInterface<E> s);
 	/*
 		PRE -
-		POST- A new SetInterface is created and the value is the difference of of the two SetInterfaces
+		POST- the difference value of of the two SetInterface objects is returned
 	*/
 	public SetInterface<E> union(SetInterface<E> s);
 	/*
 		PRE -
-		POST- A new SetInterface is created and the value is the union of of the two SetInterfaces
+		POST- the union value of of the two SetInterface objects is returned
 	*/
 	public SetInterface<E> symmetricDifference(SetInterface<E> s);
 	/*
 		PRE -
-		POST- A new SetInterface is created and the value is the symmetric difference of of the two SetInterfaces
+		POST- the symmetricDifference value of of the two SetInterface objects is returned
 	*/
 }
