@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class Main {
 
 	static PrintStream out;
-	static Map<String,SetInterface<BigInteger>> variables;
+	static Map<IdentInterface,SetInterface<BigInteger>> variables;
 
 	char nextChar(Scanner in) {
 		return in.next().charAt(0);
@@ -37,7 +37,7 @@ public class Main {
 		}
 	}
 
-	BigInteger identifier(Scanner in) throws APException{
+	BigInteger readElement(Scanner in) throws APException{
 		StringBuffer ide = new StringBuffer();
 		if (nextCharIs(in, '0')) {
 			ide.append(nextChar(in));
@@ -84,15 +84,15 @@ public class Main {
 		return set;
 	}
 
-	String varName(Scanner in) throws APException {
-		StringBuffer name = new StringBuffer();
+	IdentInterface varName(Scanner in) throws APException {
+		IdentInterface identifier = new Identifier(nextChar(in));
 		while (nextCharIsLetter(in)) {
-			name.append(in.next());
+			identifier.append(nextChar(in));
 		}
-		if (!variables.containsKey(name.toString())) {
+		if (!variables.containsKey(identifier)) {
 			throw new APException("undefined variable");
 		}
-		return name.toString();
+		return identifier;
 	} 
 
 	SetInterface<BigInteger> factor(Scanner in) throws APException {
@@ -124,10 +124,10 @@ public class Main {
 			findNext(in);
 			return set;
 		}
-		set.append(identifier(in));
+		set.append(readElement(in));
 		while(nextCharIs(in,',')) {
 			findNext(in);
-			set.append(identifier(in));
+			set.append(readElement(in));
 		}
 		if (!nextCharIs(in, '}')) {
 			throw new APException("missing closing curly brace");
@@ -137,9 +137,9 @@ public class Main {
 	}
 
 	void storeVariable(Scanner in) throws APException {
-		StringBuffer name = new StringBuffer();
+		IdentInterface identifier = new Identifier(nextChar(in));
 		while (nextCharIsLetter(in) || nextCharIsDigit(in)) {
-			name.append(nextChar(in));
+			identifier.append(nextChar(in));
 		}
 		
 		skipSpaces(in);
@@ -152,7 +152,7 @@ public class Main {
 		if (!nextCharIs(in, '\n')) {
 			throw new APException("no end of line");
 		}
-		variables.put(name.toString(), set);
+		variables.put(identifier, set);
 		skipSpaces(in);
 		
 	}
@@ -178,7 +178,7 @@ public class Main {
 
     	private void start(String[] argv) {	
 		out = new PrintStream(System.out);
-		variables = new HashMap<String, SetInterface<BigInteger>>();     	
+		variables = new HashMap<IdentInterface, SetInterface<BigInteger>>();     	
 		Scanner in = new Scanner(System.in).useDelimiter("");	
 		//Scanner in = new Scanner("? {2, 3}\n").useDelimiter("");	
 		while (in.hasNextLine()){
