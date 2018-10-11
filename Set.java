@@ -14,11 +14,18 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 		this.size = set.size;
 	}
 
-	public void append(E rhs) {
+	public SetInterface<E> init() {
+		this.elements = new List<E>();
+		this.size = 0;
+		return this;
+	}
+
+	public SetInterface<E> append(E rhs) {
 		if (!elements.find(rhs)) {
 			this.elements = this.elements.insert(rhs);
 			this.size++;
 		}
+		return this;
 	}
 
 	public int getSize() {

@@ -1,35 +1,28 @@
 public interface SetInterface<E extends Comparable<E>> {
 
     /*
-	Elements    : identifiers of Type Identifier 
+	Elements    : generic type elements 
 	Structure   : 
-	Domain      : Identifiers up to the given size
+	Domain      : elements that extends comparable
 	Constructors:	
 
-	public Set();
+	public SetInterface();
 		PRE -
-		POST- A new Set object is created
-			and value is the empty identifiers array with a default size of 20
-	public Set(int size);
+		POST- A new SetInterface object is created 
+
+	public SetInterface(SetInterface s);
 		PRE -
-		POST- A new Set object is created
-			and the value is a the empty identifiers array with a size of 'size'
-
-	public Set(Set s);
-		PRE -
-		POST- A new Set object is created
-			and the value is the copy of the set 's'
-
-	public Init();
-		PRE - 
-		POST- the value of the identifiers array is reset to empty with a default size of 20
-
-	Public Init(int size);
-		PRE - 
-		POST- the value of the identifiers array is reset to empty with a size of 'size'
+		POST- A new SetInterface object is created with a deep copy of s data
     */
+	
+	public SetInterface<E> init();
 
-	public void append(E rhs);
+	/*PRE - 
+	POST- the set is reset to empty 
+	*/
+
+
+	public SetInterface append(E rhs);
 	/*
 		PRE -
 		POST- Copys Identifier to the end of the array
