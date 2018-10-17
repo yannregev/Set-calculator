@@ -81,7 +81,7 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
     	}
     
 	public SetInterface<E> symmetricDifference(SetInterface<E> set) {
-		Set<E> s = (Set<E>)set;
+		Set<E> s = new Set<E>(set);
 		SetInterface<E> unionSet = intersection(s);
 		SetInterface<E> symmDiff = new Set<E>();
 		this.elements.goToFirst();
