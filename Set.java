@@ -1,5 +1,4 @@
 import java.util.*;
-
 import javax.swing.text.html.StyleSheet.ListPainter;
 
 public class Set<E extends Comparable<E>> implements SetInterface<E>{
@@ -12,20 +11,17 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 	}
 	public Set(SetInterface<E> s) {
 		this.elements = s.copy();
-		this.size = elements.size();
+		this.size = s.getSize();
 	}
 
-	public Set(ListInterface<E> list) {
-		this.elements = list.copy();
-		this.size = list.size();
-	}
-
+	@Override
 	public SetInterface<E> init() {
 		this.elements = new List<E>();
 		this.size = 0;
 		return this;
 	}
 
+	@Override
 	public SetInterface<E> append(E rhs) {
 		if (!elements.find(rhs)) {
 			this.elements = this.elements.insert(rhs);
@@ -34,39 +30,43 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 		return this;
 	}
 
+	@Override
 	public int getSize() {
 		return this.size;
 	}
 
+	@Override
 	public boolean contains(E rhs) {
 		return this.elements.find(rhs);
 	}
 
-	
+	@Override	
 	public SetInterface<E> intersection(SetInterface<E> s) {
 		SetInterface<E> intersectionSet = new Set<E>();
 		this.elements.goToFirst();
 		for(int i = 0; i < this.size; i++) {
 		    	if(s.contains(this.elements.retrieve())) {
-		        	intersectionSet.append(this.elements.retrieve());
+		        		intersectionSet.append(this.elements.retrieve());
 		    	}
 			this.elements.goToNext();
 		}
 		return intersectionSet;
 	}
 
+	@Override
 	public SetInterface<E> difference(SetInterface<E> s) {
 		SetInterface<E> differenceSet = new Set<E>();
 		this.elements.goToFirst();
 		for(int i = 0; i < this.size; i++) {
 		    	if(!s.contains(this.elements.retrieve())) {
-		        	differenceSet.append(this.elements.retrieve());
+		        		differenceSet.append(this.elements.retrieve());
 		    	}
 			this.elements.goToNext();
 		}
 		return differenceSet;
 	}
     
+	@Override
     	public SetInterface<E> union(SetInterface<E> s) {
         	SetInterface<E> unionSet = new Set<E>(s);
 
@@ -80,23 +80,23 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 		return unionSet;
     	}
     
+	@Override
 	public SetInterface<E> symmetricDifference(SetInterface<E> set) {
-		Set<E> s = new Set<E>(set);
-		SetInterface<E> unionSet = intersection(s);
 		SetInterface<E> symmDiff = new Set<E>();
+		ListInterface<E> list = set.copy();
 		this.elements.goToFirst();
 		for(int i = 0; i < this.size; i++) {
-			if(!unionSet.contains(this.elements.retrieve())) {
+			if(!set.contains(this.elements.retrieve())) {
 				symmDiff.append(this.elements.retrieve());
 			}
 			this.elements.goToNext();
 		}
-		s.elements.goToFirst();
-		for(int i = 0; i < s.size; i++) {
-			if(!unionSet.contains(s.elements.retrieve())) {
-				symmDiff.append(s.elements.retrieve());
+		list.goToFirst();
+		for(int i = 0; i < set.getSize(); i++) {
+			if(!this.contains(list.retrieve())) {
+				symmDiff.append(list.retrieve());
 			}
-			s.elements.goToNext();
+			list.goToNext();
 		}
 		return symmDiff;
 	}
@@ -116,6 +116,7 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 		return temp.toString();
 	}
 
+	@Override
 	public ListInterface<E> copy() {
 		return this.elements.copy();
 	}

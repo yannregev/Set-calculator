@@ -7,15 +7,15 @@ public interface IdentInterface {
 	Constructors:	
 	public Identifier(char c);
 		PRE -
-		POST- 
+		POST- A new Identifier object is created with char c as the value
 
 	public Identifier(StringBuffer element);
 		PRE -
-		POST- 
+		POST- A new Identifier object is created as a copy of the stringbuffer
 
 	public Identifier(Identifier i);
 		PRE -
-		POST- 
+		POST- A new Identifier object is created as a copy of Identifier i
 
 
     */
@@ -23,14 +23,14 @@ public interface IdentInterface {
 	public IdentInterface init(char c);
 	/*
 		PRE -
-		POST-
+		POST- IdenInterface object is reset with char c
 	*/
-	public void append(char c);
+	public IdentInterface append(char c);
 	/*
 		PRE-
 		POST-A new character is added to the identifier instance
 	*/
-	public void setValue(StringBuffer s);
+	public IdentInterface setValue(StringBuffer s);
 	/*
 		PRE-
 		POST-The value of the identifer is set to the stringbuffer

@@ -15,15 +15,15 @@ public class Main {
 	void character(Scanner in, char c) throws APException{
 		skipSpaces(in);
 		if (!nextCharIs(in, c))
-			throw new APException("'"+ c +"' Expected");
+			throw new APException("'" + c + "' Expected");
 		findNext(in);
 	}
+
 	void eoln(Scanner in) throws APException{
 		skipSpaces(in);
 		if (!nextCharIs(in, '\n'))
 			throw new APException("end of line expected");
 	} 
-	
 	
 	boolean nextCharIs(Scanner in, char c) throws APException{
 		return in.hasNext(Pattern.quote(c+""));
@@ -38,10 +38,11 @@ public class Main {
 	}
 	
 	void findNext(Scanner in) throws APException {
-		if (!in.hasNext())return;
-		do {
-			nextChar(in);
-		} while (nextCharIs(in, ' '));
+		if (!in.hasNext()) {
+			return;
+		}
+		nextChar(in);
+		skipSpaces(in);
 	}
 
 	void skipSpaces(Scanner in) throws APException{
@@ -125,7 +126,6 @@ public class Main {
 
 	SetInterface<BigInteger> set(Scanner in) throws APException {
 		SetInterface<BigInteger> set = new Set<BigInteger>();
-
 		if (nextCharIs(in, '}')) {
 			findNext(in);
 			return set;
@@ -152,14 +152,18 @@ public class Main {
 		skipSpaces(in);
 		
 	}
+	
+	void printStatement(Scanner in) throws APException {
+		findNext(in);
+		SetInterface<BigInteger> set = expression(in);
+		eoln(in);
+		out.printf("%s\n", set);
+	}
 
 	void statement(Scanner in) throws APException {
 		skipSpaces(in);
 		if (nextCharIs(in, '?')) {
-			findNext(in);
-			SetInterface<BigInteger> set = expression(in);
-			eoln(in);
-			out.printf("%s\n", set);
+			printStatement(in);
 		} else if (nextCharIsLetter(in)) {
 			storeVariable(in);
 		} else if (nextCharIs(in,'/')) {
@@ -170,11 +174,10 @@ public class Main {
 		
 	}
 
-    	private void start(String[] argv) {	
+    	private void start() {	
 		out = new PrintStream(System.out);
 		variables = new HashMap<IdentInterface, SetInterface<BigInteger>>();     	
-		Scanner in = new Scanner(System.in).useDelimiter("");	
-		//Scanner in = new Scanner("a5 = {2, 3}\n? a5\n").useDelimiter("");	
+		Scanner in = new Scanner(System.in).useDelimiter("");		
 		while (in.hasNextLine()){
 			try {
 				statement(in);
@@ -188,6 +191,6 @@ public class Main {
     	}
 
     	public static void main(String[] argv) {
-        	new Main().start(argv);
+        	new Main().start();
     	}
 }

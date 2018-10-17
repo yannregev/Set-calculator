@@ -17,8 +17,9 @@ public interface SetInterface<E extends Comparable<E>> {
 	
 	public SetInterface<E> init();
 
-	/*PRE - 
-	POST- the setInterface object is reset to empty 
+	/*	
+		PRE - 
+		POST- the setInterface object is reset to empty 
 	*/
 
 
@@ -60,4 +61,8 @@ public interface SetInterface<E extends Comparable<E>> {
 	*/
 
 	public ListInterface<E> copy();
+	/*
+		PRE -
+		POST- A copy if the list is returned
+	*/
 }

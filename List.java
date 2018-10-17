@@ -98,13 +98,21 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 
 	@Override
 	public boolean find(E d) {
-		if (isEmpty()) return false;
+		if (isEmpty()) {
+	 		return false;
+		}
 		current = first;
-		if (current.data.compareTo(d) > 0) return false;
-		if (current.data.compareTo(d) == 0) return true;
+		if (current.data.compareTo(d) > 0) {
+ 			return false;
+		}
+		if (current.data.compareTo(d) == 0) { 
+			return true;
+		}
 		current = current.next;
 		while (current != null) {
-			if (current.data.compareTo(d) == 0) return true;
+			if (current.data.compareTo(d) == 0) {
+ 				return true;
+			}
 			if (current.data.compareTo(d) > 0) {
 				current = current.prior;
 				return false;
@@ -153,7 +161,7 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 
 	@Override
 	public ListInterface<E> copy() {
-		List<E> temp = new List<E>();
+		ListInterface<E> temp = new List<E>();
 		Node node = first;
 		while (node != null) {
 			temp.insert(node.data);
