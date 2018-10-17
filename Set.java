@@ -14,6 +14,11 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 		this.size = set.size;
 	}
 
+	public Set(ListInterface<E> list) {
+		this.elements = list.copy();
+		this.size = list.size();
+	}
+
 	public SetInterface<E> init() {
 		this.elements = new List<E>();
 		this.size = 0;
@@ -108,6 +113,11 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 				this.elements.goToNext();
 		}
 		return temp.toString();
+	}
+
+	public SetInterface<E> copy() {
+		SetInterface<E> temp = new Set<E>(this.elements);
+		return temp;
 	}
 
 }

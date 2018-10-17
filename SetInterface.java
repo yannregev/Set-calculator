@@ -22,7 +22,7 @@ public interface SetInterface<E extends Comparable<E>> {
 	*/
 
 
-	public SetInterface append(E rhs);
+	public SetInterface<E> append(E rhs);
 	/*
 		PRE -
 		POST- a new element is added to the setInterface object
@@ -58,4 +58,6 @@ public interface SetInterface<E extends Comparable<E>> {
 		PRE -
 		POST- the symmetricDifference value of of the two SetInterface objects is returned
 	*/
+
+	public SetInterface<E> copy();
 }
