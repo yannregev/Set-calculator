@@ -12,7 +12,20 @@ public class Main {
 		return in.next().charAt(0);
 	}
 
-	boolean nextCharIs(Scanner in, char c) {
+	void character(Scanner in, char c) throws APException{
+		skipSpaces(in);
+		if (!nextCharIs(in, c))
+			throw new APException("'"+ c +"' Expected");
+		findNext(in);
+	}
+	void eoln(Scanner in) throws APException{
+		skipSpaces(in);
+		if (!nextCharIs(in, '\n'))
+			throw new APException("end of line expected");
+	} 
+	
+	
+	boolean nextCharIs(Scanner in, char c) throws APException{
 		return in.hasNext(Pattern.quote(c+""));
 	}
 
@@ -24,14 +37,14 @@ public class Main {
 		return in.hasNext("[a-zA-Z]");
 	}
 	
-	void findNext(Scanner in) {
+	void findNext(Scanner in) throws APException {
 		if (!in.hasNext())return;
 		do {
 			nextChar(in);
 		} while (nextCharIs(in, ' '));
 	}
 
-	void skipSpaces(Scanner in) {
+	void skipSpaces(Scanner in) throws APException{
 		while (nextCharIs(in, ' ')) {
 			nextChar(in);
 		}
@@ -74,10 +87,8 @@ public class Main {
 	
 	SetInterface<BigInteger> term(Scanner in) throws APException {
 		SetInterface<BigInteger> set = factor(in);
-		skipSpaces(in);
 		while (nextCharIs(in,'*')) {
-			nextChar(in);
-			skipSpaces(in);
+			findNext(in);
 			set = set.intersection(factor(in));
 			skipSpaces(in);
 		}
@@ -86,12 +97,13 @@ public class Main {
 
 	IdentInterface varName(Scanner in) throws APException {
 		IdentInterface identifier = new Identifier(nextChar(in));
-		while (nextCharIsLetter(in)) {
+		while (nextCharIsLetter(in) || nextCharIsDigit(in)) {
 			identifier.append(nextChar(in));
 		}
 		if (!variables.containsKey(identifier)) {
 			throw new APException("undefined variable");
 		}
+		skipSpaces(in);
 		return identifier;
 	} 
 
@@ -99,18 +111,12 @@ public class Main {
 		if (nextCharIsLetter(in)) {
 			return variables.get(varName(in));
 		} else if (nextCharIs(in, '{')) {
-			nextChar(in);
-			skipSpaces(in);
+			findNext(in);
 			return set(in);
 		} else if (nextCharIs(in, '(')) {
-			nextChar(in);
-			skipSpaces(in);
-			SetInterface<BigInteger> set = expression(in);
-			skipSpaces(in);
-			if (!nextCharIs(in, ')')) {
-				throw new APException("missing parenthesis");
-			}
 			findNext(in);
+			SetInterface<BigInteger> set = expression(in);
+			character(in, ')');
 			return set;
 		} else {
 			throw new APException("incomplete statement");
@@ -129,10 +135,10 @@ public class Main {
 			findNext(in);
 			set.append(readElement(in));
 		}
-		if (!nextCharIs(in, '}')) {
-			throw new APException("missing closing curly brace");
-		}
-		findNext(in);
+		character(in, '}');
+
+
+
 		return set;
 	}
 
@@ -142,16 +148,11 @@ public class Main {
 			identifier.append(nextChar(in));
 		}
 		
-		skipSpaces(in);
+		character(in,'=');
 
-		if (!nextCharIs(in,'=')) {
-			throw new APException("equal sign expected");
-		}
-		findNext(in);
+
 		SetInterface<BigInteger> set = expression(in);
-		if (!nextCharIs(in, '\n')) {
-			throw new APException("no end of line");
-		}
+		eoln(in);
 		variables.put(identifier, set);
 		skipSpaces(in);
 		
@@ -163,8 +164,7 @@ public class Main {
 			nextChar(in);
 			skipSpaces(in);
 			SetInterface<BigInteger> set = expression(in);
-			skipSpaces(in);
-			if (!nextCharIs(in, '\n')) throw new APException("no end of line");
+			eoln(in);
 			out.printf("%s\n", set);
 		} else if (nextCharIsLetter(in)) {
 			storeVariable(in);
@@ -180,7 +180,7 @@ public class Main {
 		out = new PrintStream(System.out);
 		variables = new HashMap<IdentInterface, SetInterface<BigInteger>>();     	
 		Scanner in = new Scanner(System.in).useDelimiter("");	
-		//Scanner in = new Scanner("? {2, 3}\n").useDelimiter("");	
+		//Scanner in = new Scanner("a5 = {2, 3}\n? a5\n").useDelimiter("");	
 		while (in.hasNextLine()){
 			try {
 				statement(in);
