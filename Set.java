@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javax.swing.text.html.StyleSheet.ListPainter;
+
 public class Set<E extends Comparable<E>> implements SetInterface<E>{
     	private ListInterface<E> elements;
 	private int size;
@@ -9,9 +11,8 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 		this.size = 0;
 	}
 	public Set(SetInterface<E> s) {
-		Set<E> set = (Set<E>)s;
-		this.elements = set.elements.copy();
-		this.size = set.size;
+		this.elements = s.copy();
+		this.size = elements.size();
 	}
 
 	public Set(ListInterface<E> list) {
@@ -115,9 +116,8 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 		return temp.toString();
 	}
 
-	public SetInterface<E> copy() {
-		SetInterface<E> temp = new Set<E>(this.elements);
-		return temp;
+	public ListInterface<E> copy() {
+		return this.elements.copy();
 	}
 
 }
