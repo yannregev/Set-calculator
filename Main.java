@@ -136,9 +136,6 @@ public class Main {
 			set.append(readElement(in));
 		}
 		character(in, '}');
-
-
-
 		return set;
 	}
 
@@ -149,8 +146,6 @@ public class Main {
 		}
 		
 		character(in,'=');
-
-
 		SetInterface<BigInteger> set = expression(in);
 		eoln(in);
 		variables.put(identifier, set);
@@ -161,8 +156,7 @@ public class Main {
 	void statement(Scanner in) throws APException {
 		skipSpaces(in);
 		if (nextCharIs(in, '?')) {
-			nextChar(in);
-			skipSpaces(in);
+			findNext(in);
 			SetInterface<BigInteger> set = expression(in);
 			eoln(in);
 			out.printf("%s\n", set);
