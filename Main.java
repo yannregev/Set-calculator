@@ -32,14 +32,14 @@ public class Main {
 
 	SetInterface<BigInteger> expression(Scanner in) throws APException {
 		SetInterface<BigInteger> set = term(in);
-		while (nextCharIs(in,'+') || nextCharIs(in,'-') || nextCharIs(in,'|')){
-			if (nextCharIs(in,'+')) {
+		while (nextCharIs(in, PLUS) || nextCharIs(in, MINUS) || nextCharIs(in, DIVIDE)){
+			if (nextCharIs(in, PLUS)) {
 				findNext(in);
 				set = set.union(term(in));
-			} else if (nextCharIs(in,'-')) {
+			} else if (nextCharIs(in, MINUS)) {
 				findNext(in);
 				set = set.difference(term(in));
-			} else if (nextCharIs(in,'|')) {
+			} else if (nextCharIs(in, DIVIDE)) {
 				findNext(in);
 				set = set.symmetricDifference(term(in));
 			}
@@ -49,7 +49,7 @@ public class Main {
 	
 	SetInterface<BigInteger> term(Scanner in) throws APException {
 		SetInterface<BigInteger> set = factor(in);
-		while (nextCharIs(in,'*')) {
+		while (nextCharIs(in, MULTIPLY)) {
 			findNext(in);
 			set = set.intersection(factor(in));
 			skipSpaces(in);
@@ -135,9 +135,9 @@ public class Main {
 		
 	}
 
-    	private void start() {	
+	void start() {
 		out = new PrintStream(System.out);
-		variables = new HashMap<IdentInterface, SetInterface<BigInteger>>();     	
+		variables = new HashMap<IdentInterface, SetInterface<BigInteger>>();
 		Scanner in = new Scanner(System.in).useDelimiter("");		
 		while (in.hasNextLine()){
 			try {
