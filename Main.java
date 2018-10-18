@@ -5,6 +5,9 @@ import java.util.regex.Pattern;
 
 public class Main {
 
+	final char MULTIPLY = '*';
+	final char PLUS = '+';
+
 	static PrintStream out;
 	static Map<IdentInterface,SetInterface<BigInteger>> variables;
 
