@@ -9,6 +9,8 @@ public class Main {
 
 	final char MULTIPLY = '*';
 	final char DIVIDE = '|';
+	final char PLUS = '+';
+	final char MINUS = '-';
 		
 	BigInteger readElement(Scanner in) throws APException{
 		StringBuffer ide = new StringBuffer();
