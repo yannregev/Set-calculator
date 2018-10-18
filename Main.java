@@ -4,56 +4,12 @@ import java.math.*;
 import java.util.regex.Pattern;
 
 public class Main {
-
-	final char MULTIPLY = '*';
-	final char PLUS = '+';
-
 	static PrintStream out;
 	static Map<IdentInterface,SetInterface<BigInteger>> variables;
 
-	char nextChar(Scanner in) {
-		return in.next().charAt(0);
-	}
-
-	void character(Scanner in, char c) throws APException{
-		skipSpaces(in);
-		if (!nextCharIs(in, c))
-			throw new APException("'" + c + "' Expected");
-		findNext(in);
-	}
-
-	void eoln(Scanner in) throws APException{
-		skipSpaces(in);
-		if (!nextCharIs(in, '\n'))
-			throw new APException("end of line expected");
-	} 
-	
-	boolean nextCharIs(Scanner in, char c) throws APException{
-		return in.hasNext(Pattern.quote(c+""));
-	}
-
-	boolean nextCharIsDigit(Scanner in) {
-		return in.hasNext("[0-9]");
-	}
-
-	boolean nextCharIsLetter(Scanner in) {
-		return in.hasNext("[a-zA-Z]");
-	}
-	
-	void findNext(Scanner in) throws APException {
-		if (!in.hasNext()) {
-			return;
-		}
-		nextChar(in);
-		skipSpaces(in);
-	}
-
-	void skipSpaces(Scanner in) throws APException{
-		while (nextCharIs(in, ' ')) {
-			nextChar(in);
-		}
-	}
-
+	final char MULTIPLY = '*';
+	final char DIVIDE = '|';
+		
 	BigInteger readElement(Scanner in) throws APException{
 		StringBuffer ide = new StringBuffer();
 		if (nextCharIs(in, '0')) {
@@ -191,9 +147,54 @@ public class Main {
 			in.nextLine();
 		}
 
-    	}
+	}
+	    
+	char nextChar(Scanner in) {
+		return in.next().charAt(0);
+	}
+
+	void character(Scanner in, char c) throws APException{
+		skipSpaces(in);
+		if (!nextCharIs(in, c))
+			throw new APException("'" + c + "' Expected");
+		findNext(in);
+	}
+
+	void eoln(Scanner in) throws APException{
+		skipSpaces(in);
+		if (!nextCharIs(in, '\n'))
+			throw new APException("end of line expected");
+	} 
+	
+	boolean nextCharIs(Scanner in, char c) throws APException{
+		return in.hasNext(Pattern.quote(c+""));
+	}
+
+	boolean nextCharIsDigit(Scanner in) {
+		return in.hasNext("[0-9]");
+	}
+
+	boolean nextCharIsLetter(Scanner in) {
+		return in.hasNext("[a-zA-Z]");
+	}
+	
+	void findNext(Scanner in) throws APException {
+		if (!in.hasNext()) {
+			return;
+		}
+		nextChar(in);
+		skipSpaces(in);
+	}
+
+	void skipSpaces(Scanner in) throws APException{
+		while (nextCharIs(in, ' ')) {
+			nextChar(in);
+		}
+	}
+
 
     	public static void main(String[] argv) {
         	new Main().start();
-    	}
+	}
+	    
 }
