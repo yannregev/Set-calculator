@@ -70,7 +70,6 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 	@Override
     	public SetInterface<E> union(SetInterface<E> s) {
         	SetInterface<E> unionSet = new Set<E>(s);
-
 		this.elements.goToFirst();
 		for(int i = 0; i < this.size; i++) {
 			if(!unionSet.contains(this.elements.retrieve())) {
