@@ -10,8 +10,9 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 		this.size = 0;
 	}
 	public Set(SetInterface<E> s) {
-		this.elements = s.copy();
-		this.size = s.getSize();
+		Set<E> set = (Set<E>)s;
+		this.elements = set.elements.copy();
+		this.size = set.size;
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 		this.elements.goToFirst();
 		for(int i = 0; i < this.size; i++) {
 		    	if(s.contains(this.elements.retrieve())) {
-		        		intersectionSet.append(this.elements.retrieve());
+		        	intersectionSet.append(this.elements.retrieve());
 		    	}
 			this.elements.goToNext();
 		}
@@ -59,7 +60,7 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 		this.elements.goToFirst();
 		for(int i = 0; i < this.size; i++) {
 		    	if(!s.contains(this.elements.retrieve())) {
-		        		differenceSet.append(this.elements.retrieve());
+		        	differenceSet.append(this.elements.retrieve());
 		    	}
 			this.elements.goToNext();
 		}
@@ -82,21 +83,21 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
     
 	@Override
 	public SetInterface<E> symmetricDifference(SetInterface<E> set) {
-		SetInterface<E> symmDiff = new Set<E>();
-		ListInterface<E> list = set.copy();
+		Set<E> s = (Set<E>)set;
+		Set<E> symmDiff = new Set<E>();
 		this.elements.goToFirst();
 		for(int i = 0; i < this.size; i++) {
-			if(!set.contains(this.elements.retrieve())) {
+			if(!s.contains(this.elements.retrieve())) {
 				symmDiff.append(this.elements.retrieve());
 			}
 			this.elements.goToNext();
 		}
-		list.goToFirst();
-		for(int i = 0; i < set.getSize(); i++) {
-			if(!this.contains(list.retrieve())) {
-				symmDiff.append(list.retrieve());
+		s.elements.goToFirst();
+		for(int i = 0; i < s.size; i++) {
+			if(!this.contains(s.elements.retrieve())) {
+				symmDiff.append(s.elements.retrieve());
 			}
-			list.goToNext();
+			s.elements.goToNext();
 		}
 		return symmDiff;
 	}
@@ -116,9 +117,5 @@ public class Set<E extends Comparable<E>> implements SetInterface<E>{
 		return temp.toString();
 	}
 
-	@Override
-	public ListInterface<E> copy() {
-		return this.elements.copy();
-	}
 
 }
