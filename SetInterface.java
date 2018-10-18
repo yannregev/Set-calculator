@@ -59,10 +59,4 @@ public interface SetInterface<E extends Comparable<E>> {
 		PRE -
 		POST- the symmetricDifference value of of the two SetInterface objects is returned
 	*/
-
-	public ListInterface<E> copy();
-	/*
-		PRE -
-		POST- A copy if the list is returned
-	*/
 }
