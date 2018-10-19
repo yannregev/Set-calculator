@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class Identifier implements IdentInterface{
 	private StringBuffer element;
 

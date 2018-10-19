@@ -4,14 +4,11 @@ import java.math.*;
 import java.util.regex.Pattern;
 
 public class Main {
-	static PrintStream out;
-	static Map<IdentInterface,SetInterface<BigInteger>> variables;
+	PrintStream out;
+	Map<IdentInterface,SetInterface<BigInteger>> variables;
 
-	final char MULTIPLY = '*';
-	final char DIVIDE = '|';
-	final char PLUS = '+';
-	final char MINUS = '-';
-		
+	final char MULTIPLY = '*', DIVIDE = '|', PLUS = '+', MINUS = '-';
+
 	BigInteger readElement(Scanner in) throws APException{
 		StringBuffer ide = new StringBuffer();
 		if (nextCharIs(in, '0')) {
@@ -62,19 +59,20 @@ public class Main {
 		while (nextCharIsLetter(in) || nextCharIsDigit(in)) {
 			identifier.append(nextChar(in));
 		}
-		if (!variables.containsKey(identifier)) {
-			throw new APException("undefined variable");
-		}
 		skipSpaces(in);
 		return identifier;
 	} 
 
 	SetInterface<BigInteger> factor(Scanner in) throws APException {
 		if (nextCharIsLetter(in)) {
-			return variables.get(varName(in));
+			IdentInterface identifier = varName(in);
+			if (!variables.containsKey(identifier)) {
+				throw new APException("undefined variable");
+			}
+			return variables.get(identifier);
 		} else if (nextCharIs(in, '{')) {
 			findNext(in);
-			return set(in);
+			return readSet(in);
 		} else if (nextCharIs(in, '(')) {
 			findNext(in);
 			SetInterface<BigInteger> set = expression(in);
@@ -85,7 +83,7 @@ public class Main {
 		}
 	}
 
-	SetInterface<BigInteger> set(Scanner in) throws APException {
+	SetInterface<BigInteger> readSet(Scanner in) throws APException {
 		SetInterface<BigInteger> set = new Set<BigInteger>();
 		if (nextCharIs(in, '}')) {
 			findNext(in);
@@ -101,11 +99,7 @@ public class Main {
 	}
 
 	void storeVariable(Scanner in) throws APException {
-		IdentInterface identifier = new Identifier(nextChar(in));
-		while (nextCharIsLetter(in) || nextCharIsDigit(in)) {
-			identifier.append(nextChar(in));
-		}
-		
+		IdentInterface identifier = varName(in);
 		character(in,'=');
 		SetInterface<BigInteger> set = expression(in);
 		eoln(in);
@@ -127,9 +121,7 @@ public class Main {
 			printStatement(in);
 		} else if (nextCharIsLetter(in)) {
 			storeVariable(in);
-		} else if (nextCharIs(in,'/')) {
-			// Nothing to do, comment
-		} else {
+		} else if (!nextCharIs(in,'/')){
 			throw new APException("no statement");
 		}
 		
